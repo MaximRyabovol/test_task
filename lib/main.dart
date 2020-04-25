@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   runApp(MyApp());
 }
 
@@ -26,22 +24,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Animation _mainWidgetFadeAnimation;
 
   AnimationController _progressBarAnimationController;
-  Animation _progressBarAnimation;
+  Animation _progressBarAppearingAnimation;
+  Animation _progressBarFillingAnimation;
+  Animation _progressBarErrorsLableAndTitleAppearing;
 
   Size baseSize;
 
   @override
   void initState() {
     super.initState();
-    _mainWidgetAnimationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    _mainWidgetFadeAnimation = Tween<double>(begin: 0.0, end: 1.0)
-        .animate(_mainWidgetAnimationController);
-
-    _progressBarAnimationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 600));
-    _progressBarAnimation = Tween<double>(begin: 0.0, end: 1.0)
-        .animate(_progressBarAnimationController);
+    _mainWidgetAnimationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
 
     _mainWidgetAnimationController.addStatusListener(
       (status) {
@@ -53,6 +46,35 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         });
       },
     );
+
+    _mainWidgetFadeAnimation = Tween<double>(begin: 0.0, end: 1.0)
+        .animate(_mainWidgetAnimationController);
+
+    _progressBarAnimationController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 1080));
+
+    _progressBarAppearingAnimation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _progressBarAnimationController,
+        curve: Interval(
+          0.0,
+          0.185,
+        ),
+      ),
+    );
+
+    _progressBarFillingAnimation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+      parent: _progressBarAnimationController,
+      curve: Interval(0.185, 0.75),
+    ));
+
+    _progressBarErrorsLableAndTitleAppearing =
+        Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+      parent: _progressBarAnimationController,
+      curve: Interval(0.75, 1.0),
+    ));
   }
 
   @override
@@ -78,51 +100,61 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           child: GestureDetector(
             onTap: () {
               _mainWidgetAnimationController.forward();
+              SystemChrome.setSystemUIOverlayStyle(
+                  SystemUiOverlayStyle(statusBarColor: Colors.transparent));
             },
-            child: SizedBox(
-              child: Container(
-                color: Colors.black,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        width: baseSize.width * 0.15,
-                        height: baseSize.width * 0.15,
-                        child: Stack(
-                          fit: StackFit.expand,
+            child: Container(
+              color: Colors.black,
+              child: Center(
+                child: AnimatedBuilder(
+                  animation: _progressBarAnimationController,
+                  builder: (BuildContext context, Widget child) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Stack(
+                          alignment: Alignment.center,
                           children: <Widget>[
-                            AnimatedBuilder(
-                              animation: _progressBarAnimation,
-                              builder: (BuildContext context, Widget child) {
-                                return Transform.rotate(
-                                  angle: 2.4,
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
-                                    backgroundColor: Colors.white30,
-                                    value: _progressBarAnimation.value,
-                                  ),
-                                );
-                              },
+                            Transform.rotate(
+                              angle: 2.4,
+                              child: Container(
+                                width: (_progressBarAppearingAnimation.value *
+                                    (baseSize.width * 0.15)),
+                                height: _progressBarAppearingAnimation.value *
+                                    (baseSize.width * 0.15),
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                  backgroundColor: Colors.white30,
+                                  value: _progressBarFillingAnimation.value,
+                                ),
+                              ),
                             ),
-                            Icon(
-                              Icons.close,
-                              color: Colors.white,
-                              size: baseSize.width * 0.11,
+                            Opacity(
+                              opacity: _progressBarErrorsLableAndTitleAppearing
+                                  .value,
+                              child: Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: baseSize.width * 0.11,
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      SizedBox(
-                        height: baseSize.width * 0.05,
-                      ),
-                      Text(
-                        'Error',
-                        style: TextStyle(color: Colors.white, fontSize: 40),
-                      ),
-                    ],
-                  ),
+                        SizedBox(
+                          height: baseSize.width * 0.05,
+                        ),
+                        Opacity(
+                          opacity:
+                              _progressBarErrorsLableAndTitleAppearing.value,
+                          child: Text(
+                            'Error',
+                            style: TextStyle(color: Colors.white, fontSize: 40),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
