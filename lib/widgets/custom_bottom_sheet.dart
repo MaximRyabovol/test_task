@@ -35,6 +35,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet>
       animation: _bottomSheetAnimationController,
       builder: (BuildContext context, Widget child) {
         return GestureDetector(
+          //prevent tapping on the sheet body
           onTap: () {},
           child: Container(
             height: (baseSize.height * 0.35) * _bottomSheetAnimation.value,
@@ -55,18 +56,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: GestureDetector(
-                      onTap: () async {
-                        manager.startAnimation();
-                      },
-                      child: Icon(
-                        Icons.close,
-                        size: 25,
-                      ),
-                    ),
-                  ),
+                  CloseIconButton(manager: manager),
                   SizedBox(
                     height: baseSize.width * 0.02,
                   ),
@@ -90,35 +80,74 @@ class _CustomBottomSheetState extends State<CustomBottomSheet>
                   SizedBox(
                     height: baseSize.width * 0.08,
                   ),
-                  FlatButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    color: Colors.yellow,
-                    padding: EdgeInsets.only(left: 0.0, right: 0.0),
-                    onPressed: () {},
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      height: baseSize.height * 0.07,
-                      width: baseSize.width,
-                      child: Center(
-                        child: Text(
-                          'Try again',
-                          style: TextStyle(fontSize: baseSize.width * 0.05),
-                        ),
-                      ),
-                    ),
-                  ),
+                  CustomBottomSheetButton(baseSize: baseSize),
                 ],
               ),
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class CustomBottomSheetButton extends StatelessWidget {
+  const CustomBottomSheetButton({
+    Key key,
+    @required this.baseSize,
+  }) : super(key: key);
+
+  final Size baseSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      color: Colors.yellow,
+      padding: EdgeInsets.only(left: 0.0, right: 0.0),
+      onPressed: () {},
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        height: baseSize.height * 0.07,
+        width: baseSize.width,
+        child: Center(
+          child: Text(
+            'Try again',
+            style: TextStyle(fontSize: baseSize.width * 0.05),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CloseIconButton extends StatelessWidget {
+  const CloseIconButton({
+    Key key,
+    @required this.manager,
+  }) : super(key: key);
+
+  final StateManager manager;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topRight,
+      child: GestureDetector(
+        onTap: () async {
+          manager.startAnimation();
+        },
+        child: Icon(
+          Icons.close,
+          size: 25,
+        ),
+      ),
     );
   }
 }
