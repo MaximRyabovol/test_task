@@ -28,6 +28,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Animation _progressBarFillingAnimation;
   Animation _progressBarErrorsLableAndTitleAppearing;
 
+  AnimationController _bottomSheetAnimationController;
+  Animation _bottomSheetAnimation;
+
   Size baseSize;
 
   @override
@@ -53,6 +56,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     _progressBarAnimationController = AnimationController(
         vsync: this, duration: Duration(milliseconds: 1080));
 
+    _progressBarAnimationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _bottomSheetAnimationController.forward();
+      }
+    });
+
     _progressBarAppearingAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
@@ -75,6 +84,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       parent: _progressBarAnimationController,
       curve: Interval(0.75, 1.0),
     ));
+
+    _bottomSheetAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 420),
+    );
+
+    _bottomSheetAnimation = Tween<double>(begin: 0.0, end: 1.0)
+        .animate(_bottomSheetAnimationController);
   }
 
   @override
@@ -87,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void dispose() {
     _mainWidgetAnimationController.dispose();
     _progressBarAnimationController.dispose();
+    _bottomSheetAnimationController.dispose();
     super.dispose();
   }
 
@@ -105,57 +123,78 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             },
             child: Container(
               color: Colors.black,
-              child: Center(
-                child: AnimatedBuilder(
-                  animation: _progressBarAnimationController,
-                  builder: (BuildContext context, Widget child) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Stack(
-                          alignment: Alignment.center,
+              child: AnimatedBuilder(
+                animation: _progressBarAnimationController,
+                builder: (BuildContext context, Widget child) {
+                  return Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Transform.rotate(
-                              angle: 2.4,
-                              child: Container(
-                                width: (_progressBarAppearingAnimation.value *
-                                    (baseSize.width * 0.15)),
-                                height: _progressBarAppearingAnimation.value *
-                                    (baseSize.width * 0.15),
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white),
-                                  backgroundColor: Colors.white30,
-                                  value: _progressBarFillingAnimation.value,
+                            Stack(
+                              alignment: Alignment.center,
+                              children: <Widget>[
+                                Transform.rotate(
+                                  angle: 2.4,
+                                  child: Container(
+                                    width:
+                                        (_progressBarAppearingAnimation.value *
+                                            (baseSize.width * 0.15)),
+                                    height:
+                                        _progressBarAppearingAnimation.value *
+                                            (baseSize.width * 0.15),
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                      backgroundColor: Colors.white30,
+                                      value: _progressBarFillingAnimation.value,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                Opacity(
+                                  opacity:
+                                      _progressBarErrorsLableAndTitleAppearing
+                                          .value,
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                    size: baseSize.width * 0.11,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: baseSize.width * 0.05,
                             ),
                             Opacity(
                               opacity: _progressBarErrorsLableAndTitleAppearing
                                   .value,
-                              child: Icon(
-                                Icons.close,
-                                color: Colors.white,
-                                size: baseSize.width * 0.11,
+                              child: Text(
+                                'Error',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 40),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: baseSize.width * 0.05,
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: AnimatedBuilder(
+                          animation: _bottomSheetAnimationController,
+                          builder: (BuildContext context, Widget child) {
+                            return Container(
+                              color: Colors.red,
+                              height: (baseSize.height * 0.35) *
+                                  _bottomSheetAnimation.value,
+                            );
+                          },
                         ),
-                        Opacity(
-                          opacity:
-                              _progressBarErrorsLableAndTitleAppearing.value,
-                          child: Text(
-                            'Error',
-                            style: TextStyle(color: Colors.white, fontSize: 40),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
