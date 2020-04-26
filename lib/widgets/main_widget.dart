@@ -36,7 +36,14 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.green,
+        decoration: BoxDecoration(
+          color: Colors.green,
+          image: DecorationImage(
+              image: AssetImage(
+                'assets/images/cat.jpg',
+              ),
+              fit: BoxFit.cover),
+        ),
         child: FadeTransition(
           opacity: _mainWidgetFadeAnimation,
           child: GestureDetector(
