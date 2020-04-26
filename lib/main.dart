@@ -140,10 +140,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                   child: Container(
                                     width:
                                         (_progressBarAppearingAnimation.value *
-                                            (baseSize.width * 0.15)),
+                                            (baseSize.width * 0.11)),
                                     height:
                                         _progressBarAppearingAnimation.value *
-                                            (baseSize.width * 0.15),
+                                            (baseSize.width * 0.11),
                                     child: CircularProgressIndicator(
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                           Colors.white),
@@ -159,13 +159,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                   child: Icon(
                                     Icons.close,
                                     color: Colors.white,
-                                    size: baseSize.width * 0.11,
+                                    size: baseSize.width * 0.09,
                                   ),
                                 ),
                               ],
                             ),
                             SizedBox(
-                              height: baseSize.width * 0.05,
+                              height: baseSize.width * 0.03,
                             ),
                             Opacity(
                               opacity: _progressBarErrorsLableAndTitleAppearing
@@ -173,7 +173,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                               child: Text(
                                 'Error',
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 40),
+                                    color: Colors.white,
+                                    fontSize: baseSize.width * 0.06),
                               ),
                             ),
                           ],
@@ -185,9 +186,85 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           animation: _bottomSheetAnimationController,
                           builder: (BuildContext context, Widget child) {
                             return Container(
-                              color: Colors.red,
                               height: (baseSize.height * 0.35) *
                                   _bottomSheetAnimation.value,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15),
+                                ),
+                              ),
+                              padding: EdgeInsets.only(
+                                top: 25.0,
+                                left: 25.0,
+                                right: 25.0,
+                              ),
+                              child: SingleChildScrollView(
+                                physics: NeverScrollableScrollPhysics(),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: Icon(
+                                        Icons.close,
+                                        size: 25,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: baseSize.width * 0.02,
+                                    ),
+                                    Text(
+                                      'Something went wrong',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: baseSize.width * 0.07,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: baseSize.width * 0.04,
+                                    ),
+                                    Text(
+                                      'We couldn\'t process your request. Please try again.',
+                                      style: TextStyle(
+                                        fontSize: baseSize.width * 0.04,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: baseSize.width * 0.08,
+                                    ),
+                                    FlatButton(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                      color: Colors.yellow,
+                                      padding: EdgeInsets.only(
+                                          left: 0.0, right: 0.0),
+                                      onPressed: () {},
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(10),
+                                          ),
+                                        ),
+                                        height: baseSize.height * 0.07,
+                                        width: baseSize.width,
+                                        child: Center(
+                                          child: Text(
+                                            'Try again',
+                                            style: TextStyle(
+                                                fontSize:
+                                                    baseSize.width * 0.05),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             );
                           },
                         ),
