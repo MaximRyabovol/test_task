@@ -108,6 +108,16 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  void startAnimation() async {
+    if (_bottomSheetAnimationController.status == AnimationStatus.completed) {
+      await _bottomSheetAnimationController.reverse();
+      _progressBarAnimationController.reset();
+      await _mainWidgetAnimationController.reverse();
+    } else {
+      _mainWidgetAnimationController.forward();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,9 +127,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           opacity: _mainWidgetFadeAnimation,
           child: GestureDetector(
             onTap: () {
-              _mainWidgetAnimationController.forward();
-              SystemChrome.setSystemUIOverlayStyle(
-                  SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+              startAnimation();
             },
             child: Container(
               color: Colors.black,
@@ -185,84 +193,93 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         child: AnimatedBuilder(
                           animation: _bottomSheetAnimationController,
                           builder: (BuildContext context, Widget child) {
-                            return Container(
-                              height: (baseSize.height * 0.35) *
-                                  _bottomSheetAnimation.value,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15),
+                            return GestureDetector(
+                              onTap: () {},
+                              child: Container(
+                                height: (baseSize.height * 0.35) *
+                                    _bottomSheetAnimation.value,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15),
+                                  ),
                                 ),
-                              ),
-                              padding: EdgeInsets.only(
-                                top: 25.0,
-                                left: 25.0,
-                                right: 25.0,
-                              ),
-                              child: SingleChildScrollView(
-                                physics: NeverScrollableScrollPhysics(),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Align(
-                                      alignment: Alignment.topRight,
-                                      child: Icon(
-                                        Icons.close,
-                                        size: 25,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: baseSize.width * 0.02,
-                                    ),
-                                    Text(
-                                      'Something went wrong',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: baseSize.width * 0.07,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: baseSize.width * 0.04,
-                                    ),
-                                    Text(
-                                      'We couldn\'t process your request. Please try again.',
-                                      style: TextStyle(
-                                        fontSize: baseSize.width * 0.04,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: baseSize.width * 0.08,
-                                    ),
-                                    FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      color: Colors.yellow,
-                                      padding: EdgeInsets.only(
-                                          left: 0.0, right: 0.0),
-                                      onPressed: () {},
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10),
-                                          ),
-                                        ),
-                                        height: baseSize.height * 0.07,
-                                        width: baseSize.width,
-                                        child: Center(
-                                          child: Text(
-                                            'Try again',
-                                            style: TextStyle(
-                                                fontSize:
-                                                    baseSize.width * 0.05),
+                                padding: EdgeInsets.only(
+                                  top: 25.0,
+                                  left: 25.0,
+                                  right: 25.0,
+                                ),
+                                child: SingleChildScrollView(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            startAnimation();
+                                          },
+                                          child: Icon(
+                                            Icons.close,
+                                            size: 25,
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                      SizedBox(
+                                        height: baseSize.width * 0.02,
+                                      ),
+                                      Text(
+                                        'Something went wrong',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: baseSize.width * 0.07,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: baseSize.width * 0.04,
+                                      ),
+                                      Text(
+                                        'We couldn\'t process your request. Please try again.',
+                                        style: TextStyle(
+                                          fontSize: baseSize.width * 0.04,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: baseSize.width * 0.08,
+                                      ),
+                                      FlatButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        color: Colors.yellow,
+                                        padding: EdgeInsets.only(
+                                            left: 0.0, right: 0.0),
+                                        onPressed: () {},
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10),
+                                            ),
+                                          ),
+                                          height: baseSize.height * 0.07,
+                                          width: baseSize.width,
+                                          child: Center(
+                                            child: Text(
+                                              'Try again',
+                                              style: TextStyle(
+                                                  fontSize:
+                                                      baseSize.width * 0.05),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             );
