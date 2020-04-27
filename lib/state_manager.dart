@@ -12,7 +12,7 @@ class StateManager {
   AnimationController bottomSheetAnimationController;
   Animation bottomSheetAnimation;
 
-  void initMainWidgetAnimation(TickerProvider tickerProvider) {
+  void initAnimation(TickerProvider tickerProvider) {
     mainWidgetAnimationController = AnimationController(
         vsync: tickerProvider, duration: const Duration(milliseconds: 300));
 
@@ -26,9 +26,7 @@ class StateManager {
 
     mainWidgetFadeAnimation = Tween<double>(begin: 0.0, end: 1.0)
         .animate(mainWidgetAnimationController);
-  }
 
-  void initProgressBarAnimationController(TickerProvider tickerProvider) {
     progressBarAnimationController = AnimationController(
         vsync: tickerProvider, duration: Duration(milliseconds: 1080));
 
@@ -59,9 +57,7 @@ class StateManager {
       parent: progressBarAnimationController,
       curve: Interval(0.75, 1.0),
     ));
-  }
 
-  void initCustomBotomSheetAnimation(TickerProvider tickerProvider) {
     bottomSheetAnimationController = AnimationController(
       vsync: tickerProvider,
       duration: Duration(milliseconds: 420),

@@ -8,37 +8,31 @@ class CustomBottomSheet extends StatefulWidget {
   _CustomBottomSheetState createState() => _CustomBottomSheetState();
 }
 
-class _CustomBottomSheetState extends State<CustomBottomSheet>
-    with TickerProviderStateMixin {
-  StateManager manager;
-
-  AnimationController _bottomSheetAnimationController;
-  Animation _bottomSheetAnimation;
+class _CustomBottomSheetState extends State<CustomBottomSheet> {
+  StateManager animationManager;
 
   Size baseSize;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
     baseSize = MediaQuery.of(context).size;
 
-    manager = Provider.of(context);
-    manager.initCustomBotomSheetAnimation(this);
-    _bottomSheetAnimationController = manager.bottomSheetAnimationController;
-
-    _bottomSheetAnimation = manager.bottomSheetAnimation;
+    animationManager = Provider.of(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _bottomSheetAnimationController,
+      animation: animationManager.bottomSheetAnimationController,
       builder: (BuildContext context, Widget child) {
         return GestureDetector(
           //prevent tapping on the sheet body
           onTap: () {},
           child: Container(
-            height: (baseSize.height * 0.35) * _bottomSheetAnimation.value,
+            height: (baseSize.height * 0.35) *
+                animationManager.bottomSheetAnimation.value,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
@@ -56,7 +50,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  CloseIconButton(manager: manager),
+                  CloseIconButton(onTap: animationManager),
                   SizedBox(
                     height: baseSize.width * 0.02,
                   ),
@@ -130,19 +124,17 @@ class CustomBottomSheetButton extends StatelessWidget {
 class CloseIconButton extends StatelessWidget {
   const CloseIconButton({
     Key key,
-    @required this.manager,
+    @required this.onTap,
   }) : super(key: key);
 
-  final StateManager manager;
+  final StateManager onTap;
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.topRight,
       child: GestureDetector(
-        onTap: () async {
-          manager.startAnimation();
-        },
+        onTap: () => onTap.startAnimation(),
         child: Icon(
           Icons.close,
           size: 25,

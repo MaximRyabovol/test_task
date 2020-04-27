@@ -10,13 +10,8 @@ class ErrorLabel extends StatefulWidget {
   _ErrorLabelState createState() => _ErrorLabelState();
 }
 
-class _ErrorLabelState extends State<ErrorLabel> with TickerProviderStateMixin {
-  StateManager manager;
-
-  AnimationController _progressBarAnimationController;
-  Animation _progressBarAppearingAnimation;
-  Animation _progressBarFillingAnimation;
-  Animation _progressBarErrorsLableAndTitleAppearing;
+class _ErrorLabelState extends State<ErrorLabel> {
+  StateManager animationManager;
 
   Size baseSize;
 
@@ -25,23 +20,13 @@ class _ErrorLabelState extends State<ErrorLabel> with TickerProviderStateMixin {
     super.didChangeDependencies();
     baseSize = MediaQuery.of(context).size;
 
-    manager = Provider.of(context);
-    manager.initProgressBarAnimationController(this);
-
-    _progressBarAnimationController = manager.progressBarAnimationController;
-
-    _progressBarAppearingAnimation = manager.progressBarAppearingAnimation;
-
-    _progressBarFillingAnimation = manager.progressBarFillingAnimation;
-
-    _progressBarErrorsLableAndTitleAppearing =
-        manager.progressBarErrorsLableAndTitleAppearing;
+    animationManager = Provider.of(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _progressBarAnimationController,
+      animation: animationManager.progressBarAnimationController,
       builder: (BuildContext context, Widget child) {
         return Expanded(
           child: Column(
@@ -53,19 +38,23 @@ class _ErrorLabelState extends State<ErrorLabel> with TickerProviderStateMixin {
                   Transform.rotate(
                     angle: 2.4,
                     child: Container(
-                      width: (_progressBarAppearingAnimation.value *
+                      width: (animationManager
+                              .progressBarAppearingAnimation.value *
                           (baseSize.width * 0.11)),
-                      height: _progressBarAppearingAnimation.value *
-                          (baseSize.width * 0.11),
+                      height:
+                          animationManager.progressBarAppearingAnimation.value *
+                              (baseSize.width * 0.11),
                       child: CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         backgroundColor: Colors.white30,
-                        value: _progressBarFillingAnimation.value,
+                        value:
+                            animationManager.progressBarFillingAnimation.value,
                       ),
                     ),
                   ),
                   Opacity(
-                    opacity: _progressBarErrorsLableAndTitleAppearing.value,
+                    opacity: animationManager
+                        .progressBarErrorsLableAndTitleAppearing.value,
                     child: Icon(
                       Icons.close,
                       color: Colors.white,
@@ -78,7 +67,8 @@ class _ErrorLabelState extends State<ErrorLabel> with TickerProviderStateMixin {
                 height: baseSize.width * 0.03,
               ),
               Opacity(
-                opacity: _progressBarErrorsLableAndTitleAppearing.value,
+                opacity: animationManager
+                    .progressBarErrorsLableAndTitleAppearing.value,
                 child: Text(
                   'Error',
                   style: TextStyle(
