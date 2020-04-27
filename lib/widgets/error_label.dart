@@ -26,7 +26,7 @@ class _ErrorLabelState extends State<ErrorLabel> {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animationManager.progressBarAnimationController,
+      animation: animationManager.progressBarAndErrorLabelAnimationController,
       builder: (BuildContext context, Widget child) {
         return Expanded(
           child: Column(

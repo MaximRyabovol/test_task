@@ -12,8 +12,6 @@ class MainWidget extends StatefulWidget {
 class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
   StateManager animationManager;
 
-  Animation _mainWidgetFadeAnimation;
-
   Size baseSize;
 
   @override
@@ -22,7 +20,6 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
     animationManager = Provider.of(context);
     animationManager.initAnimation(this);
 
-    _mainWidgetFadeAnimation = animationManager.mainWidgetFadeAnimation;
     baseSize = MediaQuery.of(context).size;
   }
 
@@ -40,7 +37,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
           color: Colors.green,
         ),
         child: FadeTransition(
-          opacity: _mainWidgetFadeAnimation,
+          opacity: animationManager.mainWidgetFadeAnimation,
           child: GestureDetector(
             onTap: () => animationManager.startAnimation(),
             child: Container(
