@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:test_task/provider.dart';
 import 'package:test_task/state_manager.dart';
 import 'package:test_task/widgets/custom_bottom_sheet.dart';
@@ -41,7 +42,7 @@ class _MainWidgetState extends State<MainWidget> with TickerProviderStateMixin {
           child: GestureDetector(
             onTap: () => animationManager.startAnimation(),
             child: Container(
-              color: Colors.black,
+              color: Color(0xFF272b3d),
               child: Column(
                 children: <Widget>[
                   ErrorLabel(),

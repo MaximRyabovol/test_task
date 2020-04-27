@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:test_task/state_manager.dart';
 
+import 'package:test_task/state_manager.dart';
 import '../provider.dart';
 
 class CustomBottomSheet extends StatefulWidget {
@@ -99,7 +99,7 @@ class CustomBottomSheetButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      color: Colors.yellow,
+      color: Color(0xFFfcd846),
       padding: EdgeInsets.only(left: 0.0, right: 0.0),
       onPressed: () {
         //empty call
